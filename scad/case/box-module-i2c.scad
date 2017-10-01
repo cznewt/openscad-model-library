@@ -10,10 +10,10 @@ Licensed under the Creative Commons - Attribution - Share Alike license
 box_Size_X          = 90;
 // Dimension: Box outer Y-Size [mm]
 box_Size_Y          = 80;
-// Dimension: Box Inner6 height [mm]
+// Dimension: Box Inner height [mm]
 box_Inner_Height    = 36;
 // Box bottom/top thickness
-box_BottomTop_Thickness =  1.6; // [0.6:0.2:3]
+box_BottomTop_Thickness =  1.5; // [0.6:0.2:3]
 // Edge corner radius 
 box_Screw_Corner_Radius   =  6; // [2:1:10]
 // four outer screw hole diameters
@@ -181,9 +181,9 @@ module screwNose(screwholeDiameter=4, noseHeight=5) {
 		cylinder(r=screwholeDiameter/2, h=noseHeight, $fn=60);
 	}
 }
-box();
+lid();
 if (box_Size_X>box_Size_Y) {
-	translate([0, box_Size_Y+5+screwnose_Diameter+screwnose_Wall_Thickness, 0]) lid();	
+	//translate([0, box_Size_Y+5+screwnose_Diameter+--screwnose_Wall_Thickness, 0]) lid();	
 } else {
-	translate([box_Size_X+5, 0, 0]) lid();	
+	//translate([box_Size_X+5, 0, 0]) lid();	
 }

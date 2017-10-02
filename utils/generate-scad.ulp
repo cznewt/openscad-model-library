@@ -1,0 +1,691 @@
+// Copyright 2013 J.Lamy, Steve Kelly. All rights reserved. Based on EagleUp.
+//
+// Redistribution and use in source and binary forms, with or without modification, are
+// permitted provided that the following conditions are met:
+//
+//   1. Redistributions of source code must retain the above copyright notice, this list of
+//      conditions and the following disclaimer.
+//
+//   2. Redistributions in binary form must reproduce the above copyright notice, this list
+//      of conditions and the following disclaimer in the documentation and/or other materials
+//      provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL J.Lamy OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+#usage "<b>Exports a board to OpenSCAD</b>\n"
+"<p>Generates a 3D model of the board and components."
+"<p>Documentation avaliable at http://github.com/sjkelly/EagleToOpenSCAD"
+"<p><author>Author: sjkelly@wpi.edu</author>"
+
+#require 5.0900 // functions netget, cfgget and cfgset only available on versions 5.9 and newer
+// another version is available for older Eagle installations
+
+// you can adjust board colors below
+// can use any string in w3C SVG color list
+// https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/The_OpenSCAD_Language#color
+string board_colors[] = {"green" , "red" , "blue" , "black" , "white" , "yellow"};
+
+// gloabal variables
+string mkdir_cmd, export_path, cmd;
+
+// find string s2 in s1, and replace with s3
+string replace_string(string s1, string s2, string s3) {
+    int i, pos = 1;
+    string a = s1;
+    while (pos >= 0) {
+        pos = strstr(a, s2);
+        if (pos < 0)
+            break;
+        string st1 = strsub(a, 0, pos);
+        string st2 = strsub(a, pos + strlen(s2));
+        a = st1+s3+st2;
+    }
+    return a;
+}
+
+int is_number(string s){
+    for(int i = 0; s[i]; i++)
+        if(!isdigit(s[i]))
+            return 0;
+    return 1;
+}
+
+/* OS detection function suggested by Andreas Weidner
+http://www.eaglecentral.ca/forums/index.php?t=msg&goto=139751 */
+int is_windows()
+{
+  //Returns 1, if EAGLE is running under Windows (0 for Linux/Mac)
+  if ((strsub(argv[0],0,1)=="/") && (strsub(argv[0],0,2)!="//"))
+    return 0;
+  return 1;
+}
+
+/* functions below are used to check and correct the curved edges of the board */
+
+real deg_to_rad(real deg){
+    return (deg/360)*(2*PI);
+}
+
+real get_arc_mid_x(UL_ARC arc)
+{
+  // Get an angle at the midpoint
+  int x1i, y1i;
+  real da = deg_to_rad((arc.angle1 - arc.angle2)/2);
+  if(da > 0)
+    {
+      x1i = arc.x1;
+      y1i = arc.y1;
+    }
+  else
+    {
+      x1i = arc.x2;
+      y1i = arc.y2;
+    }
+  // rotate point
+  return ((x1i-arc.xc) * cos(da) - (y1i-arc.yc) * sin(da)) + arc.xc;
+}
+
+real get_arc_mid_y(UL_ARC arc)
+{
+  // Get an angle at the midpoint
+  int x1i, y1i;
+  real da = deg_to_rad((arc.angle1 - arc.angle2)/2);
+
+  if(da > 0) {
+      x1i = arc.x1;
+      y1i = arc.y1;
+    }
+  else {
+      x1i = arc.x2;
+      y1i = arc.y2;
+    }
+  // rotate point
+  return ((x1i-arc.xc) * sin(da) + (y1i-arc.yc) * cos(da)) + arc.yc;
+}
+
+real get_wire_max_v(UL_WIRE wire)
+{
+  if(wire.arc)
+    return max(wire.y1, max(wire.y2, get_arc_mid_y(wire.arc)));
+  else
+    return max(wire.y1, wire.y2);
+}
+
+real get_wire_max_h(UL_WIRE wire)
+{
+  if(wire.arc)
+    return max(wire.x1, max(wire.x2, get_arc_mid_x(wire.arc)));
+  else
+    return max(wire.x1, wire.x2);
+}
+
+real get_wire_min_v(UL_WIRE wire)
+{
+  if(wire.arc)
+    return min(wire.y1, min(wire.y2, get_arc_mid_y(wire.arc)));
+  else
+    return min(wire.y1, wire.y2);
+}
+
+real get_wire_min_h(UL_WIRE wire)
+{
+  if(wire.arc)
+    return min(wire.x1, min(wire.x2, get_arc_mid_x(wire.arc)));
+  else
+    return min(wire.x1, wire.x2);
+}
+
+// list all visible layers in a string with space separation between numbers
+string list_active_layers( void )
+{
+  string active_layers;
+  board (B)
+  {
+    B.layers(L)
+    {
+      if(L.visible == 1)
+        sprintf( active_layers , "%s %d" , active_layers , L.number );
+    }
+  }
+  return (active_layers + ";\n");
+}
+
+void help_box(void)
+{
+    dlgMessageBox("This is the first time you ran generate-scad.ulp The next \
+window will help you configure your local settings. All your preferences \
+are saved and will be restored when you run generate-scad.ulp the next time.");
+}
+
+
+// only runs in the board, not schematic or library
+if (board) board(B)
+  {
+    int major_version = 0;
+    int minor_version = 1;
+
+    // Version Number
+    string genscad_version;
+    sprintf( genscad_version , "%d.%d" , major_version , minor_version);
+
+    //Options
+    real board_thickness;
+    int board_color_selected;
+    int outline_layer;
+    int board_only;
+    int skip_vias;
+    int use_extrude;
+    int use_polyholes;
+
+    string active_layers = list_active_layers();
+
+    // read parameters from user's eaglerc file, if first run => use default values
+    //***5.9
+    board_thickness = strtod(cfgget("genscad.board_thickness" , "1.6"));
+    board_color_selected = strtol(cfgget("genscad.board_color_selected" , "1")); // default => red
+    outline_layer = strtol(cfgget( "genscad.outline_layer" , "0")); // default => dimension
+    board_only = strtol(cfgget( "genscad.board_only" , "0")); // default => disabled
+    export_path = cfgget("genscad.export_path" , "");
+    skip_vias = strtol(cfgget( "genscad.skip_vias" , "1")); // default => disabled
+    use_extrude = strtol(cfgget( "genscad.use_extrude" , "0")); // default => disabled
+    use_polyholes = strtol(cfgget( "genscad.use_polyholes" , "0")); // default => disabled
+    string board_thickness_unit[] = {"mm","mils","inch"};
+    int board_thickness_unit_selected = 0; // mm selected by default
+
+    // automatic OS detection for OS specific commands
+    if( is_windows() )
+      {
+        mkdir_cmd = "cmd.exe /c mkdir"; // include system call
+      }
+    else
+      {
+        mkdir_cmd = "mkdir"; // on linux and mac OS, no need to call terminal
+      }
+
+    int previous_unit = board_thickness_unit_selected;
+    int dlg_accepted = dlgDialog("Generate-OpenSCAD " + genscad_version + " Parameters")
+    {
+      dlgHBoxLayout
+      {
+        dlgStretch(1);
+        dlgVBoxLayout
+        {
+          dlgStretch(1);
+          dlgGroup("Outline layer")
+          {
+            dlgHBoxLayout
+            {
+              dlgRadioButton("(20) Dimension", outline_layer);
+              dlgRadioButton("(46) Milling", outline_layer);
+            }
+          };
+          dlgGroup("3D export")
+          {
+            dlgHBoxLayout
+            {
+              dlgRadioButton("3D CSG", use_extrude);
+              dlgRadioButton("Extrude", use_extrude);
+            }
+          };
+          dlgGroup("Holes")
+          {
+            dlgHBoxLayout
+            {
+              dlgRadioButton("Regular", use_polyholes);
+              dlgRadioButton("Polyholes (requires Magpie)", use_polyholes);
+            }
+          };
+          dlgGroup("Misc")
+          {
+            dlgHBoxLayout
+            {
+              dlgCheckBox("Board only (no parts)", board_only);
+              dlgCheckBox("skip vias (quicker)", skip_vias);
+            }
+          };
+          dlgGridLayout {
+            dlgCell( 1 , 0 ) dlgLabel("Board thickness");
+            dlgCell( 1 , 1 ) dlgHBoxLayout {
+              dlgRealEdit(board_thickness, 0.0, 500.0);
+              dlgComboBox(board_thickness_unit, board_thickness_unit_selected)
+              {
+                if ( previous_unit==0 && board_thickness_unit_selected==1)
+                  board_thickness /= 0.0254;
+                else if ( previous_unit==0 && board_thickness_unit_selected==2)
+                  board_thickness /= 25.4;
+                else if ( previous_unit==1 && board_thickness_unit_selected==0)
+                  board_thickness *= 0.0254;
+                else if ( previous_unit==1 && board_thickness_unit_selected==2)
+                  board_thickness /= 1000;
+                else if ( previous_unit==2 && board_thickness_unit_selected==0)
+                  board_thickness *= 25.4;
+                else if ( previous_unit==2 && board_thickness_unit_selected==1)
+                  board_thickness *= 1000;
+                previous_unit = board_thickness_unit_selected;
+              };
+            }
+            dlgCell( 2 , 0 ) dlgLabel("Solder mask color");
+            dlgCell( 2 , 1 ) dlgComboBox(board_colors, board_color_selected);
+            dlgCell( 3 , 0 ) dlgLabel("Export subfolder");
+            dlgCell( 3 , 1 ) dlgStringEdit(export_path);
+          }
+          dlgHBoxLayout {
+            dlgStretch(1);
+            dlgPushButton("+OK") dlgAccept(1);
+            dlgPushButton("Cancel") dlgReject(-1);
+            dlgPushButton("Help") help_box();
+            dlgStretch(1);
+          }
+          dlgStretch(1);
+        }
+        dlgStretch(1);
+      }
+    };
+
+    if( dlg_accepted == -1)
+      exit(-1);
+
+    // adjust board thickness in case of units != mm
+    if( board_thickness_unit_selected == 1)
+      board_thickness *= 0.0254;
+    else if( board_thickness_unit_selected == 2)
+      board_thickness *= 25.4;
+
+    /* save in user's eaglerc file the settings */
+    string str_setting;	// used to buffer the decimal values
+
+    sprintf(str_setting, "%.2f", board_thickness);
+    cfgset("genscad.board_thickness", str_setting);
+    sprintf(str_setting, "%d", board_color_selected);
+    cfgset("genscad.board_color_selected", str_setting);
+    sprintf(str_setting, "%d", outline_layer);
+    cfgset("genscad.outline_layer", str_setting);
+    sprintf(str_setting, "%d", board_only);
+    cfgset("genscad.board_only", str_setting);
+    cfgset("genscad.export_path", export_path);
+    sprintf(str_setting, "%d", skip_vias);
+    cfgset("genscad.skip_vias", str_setting);
+
+
+// if subfolder defined, and does not exist, create it automatically
+// unfortunately this uses a system() call and a popup for the user in versions < 5.11
+    if( export_path != "" )
+      {
+        string a[];
+        int folder_found =0;
+        int nglob = fileglob(a, filedir(B.name) + "*");
+        for( int i=0 ; i<nglob ; i++)
+          {
+            if( strsub( a[i] , strlen( a[i] )-1 , 1 ) == "/" ) // is a folder
+              {
+                // extract folder name by removing board directory
+                if(   strsub( a[i] , strlen(filedir(B.name) ) ) == export_path )
+                  // found the path
+                  folder_found =1;
+
+              }
+          }
+        if( folder_found == 0 )
+          {
+
+            if( EAGLE_VERSION == 5 && EAGLE_RELEASE < 11 )
+              dlgMessageBox( "You have set in the general settings the subfolder " + export_path + " for your eagleUp files.\nEagle might show a popup requesting confirmation for a system command. This is normal, the command only creates the missing subfolder." );
+
+            string a[];
+            strsplit(a, filedir(B.name)+strsub( export_path , 0 , strlen( export_path )-1 ), '/');
+            string new_folder_path;
+            if( is_windows() )
+              new_folder_path = strjoin(a, '\\');
+            else
+              new_folder_path = strjoin(a, '/');
+              system( mkdir_cmd + " " + "\"" + new_folder_path + "\"");
+          }
+      }
+
+// include model_path in path
+    string scad_file = filesetext( filedir(B.name) + export_path + filename( B.name )  ,  ".scad");
+    output( scad_file , "wt")
+    {
+
+      // Prefix used to store the images
+      string directory = filedir(B.name) + export_path;
+
+      int target_outline_layer = 20;
+      if( outline_layer == 0)
+        target_outline_layer = 20;
+      if( outline_layer == 1)
+        target_outline_layer = 46;
+
+      int CONSTANT_MAX = 2147483647;
+      int min_h = CONSTANT_MAX,
+          max_h = -1 * CONSTANT_MAX,
+          min_v = min_h,
+          max_v = max_h;
+
+      B.wires(W)
+      {
+        if( W.layer == target_outline_layer)
+          {
+            max_v = max( max_v, get_wire_max_v(W) );
+            max_h = max( max_h, get_wire_max_h(W) );
+            min_v = min( min_v, get_wire_min_v(W) );
+            min_h = min( min_h, get_wire_min_h(W) );
+          }
+      }
+
+      B.elements(E)
+      {
+        E.package.wires(W)
+        {
+          if( W.layer == target_outline_layer)
+            {
+              max_v = max( max_v, get_wire_max_v(W) );
+              max_h = max( max_h, get_wire_max_h(W) );
+              min_v = min( min_v, get_wire_min_v(W) );
+              min_h = min( min_h, get_wire_min_h(W) );
+            }
+        }
+      }
+
+      if( min_v == CONSTANT_MAX )
+        {
+          if( outline_layer == 0 )
+            dlgMessageBox( "Error, cannot find any outline on the layout ! \n check the dimension (20) layer." );
+          else
+            dlgMessageBox( "Error, cannot find any outline on the layout ! \n check the milling (46) layer." );
+          exit(-1);
+        }
+
+      /* Starting data for .scad file */
+      string module_name = replace_string(filename(B.name),".brd","");
+
+      // cleanup module name for OpenSCAD compatibility
+      module_name = replace_string(module_name, "-", "_");
+
+      if(use_polyholes)printf("include <Magpie/magpie.scad>;\n\n");
+      printf("module %s(){\n\tboard_thickness = %f;\n\teta = 0.1;\n\tboard_size = [%f,%f", module_name, board_thickness, (u2mm(max_h)-u2mm(min_h)), (u2mm(max_v)-u2mm(min_v)));
+        if(use_extrude)
+            printf("];\n");
+        else
+            printf(",board_thickness];\n");
+	  if(!use_polyholes)printf("\tfn = 18;\n");
+      printf("\tboard_origin = [%f,%f];\n", u2mm(min_h), u2mm(min_v));
+      printf("\tunion(){\n");
+      printf("\t\tcolor(\"%s\")",board_colors[board_color_selected]);
+      if(use_extrude)printf("linear_extrude(height=board_thickness,center=false, convexity=10)");
+      printf("difference(){\n");
+      printf("\t\t\ttranslate(board_origin)");
+      if(use_extrude)
+        printf("square(board_size); \/\/Board\n");
+      else
+        printf("cube(board_size); \/\/Board\n");
+
+      // list the holes of the board hole, x, y, radius,
+      int holes=0;
+
+      B.holes(H)
+      {
+        holes++;
+        if(use_extrude && use_polyholes)
+          printf("\t\t\ttranslate([%.3f,%.3f])poly_circle(r=%f); \/\/Hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2);
+        else if(use_extrude)
+          printf("\t\t\ttranslate([%.3f,%.3f])circle(r=%f,$fn=fn); \/\/Hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2);
+        else if(use_polyholes)
+          printf("\t\t\ttranslate([%.3f,%.3f,-0.1])poly_cylinder(r=%f, h=board_thickness+0.2); \/\/Hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2);
+        else
+          printf("\t\t\ttranslate([%.3f,%.3f,-0.1])cylinder(r=%f, h=board_thickness+0.2,$fn=fn); \/\/Hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2); 
+      }
+
+      B.elements(E)
+      {
+        E.package.holes(H)
+        {
+          holes++;
+        if(use_extrude && use_polyholes)
+          printf("\t\t\ttranslate([%.3f,%.3f])poly_circle(r=%f); \/\/hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2);
+        else if(use_extrude)
+          printf("\t\t\ttranslate([%.3f,%.3f])circle(r=%f,$fn=fn); \/\/hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2);
+        else if(use_polyholes)
+          printf("\t\t\ttranslate([%.3f,%.3f,-eta])poly_cylinder(r=%f, h=board_thickness+eta*2); \/\/hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2);
+        else
+          printf("\t\t\ttranslate([%.3f,%.3f,-eta])cylinder(r=%f, h=board_thickness+eta*2,$fn=fn); \/\/hole\n",
+               u2mm(H.x) , u2mm(H.y) , u2mm(H.drill)/2); 
+        }
+      }
+
+      if( skip_vias == 0 ) //vias are slow to process in Sketchup so this can save a lot of time
+        {
+          B.signals(S)
+          {
+            S.vias(V)
+            {
+              holes++;
+              if(use_extrude && use_polyholes)
+                printf("\t\t\ttranslate([%.3f,%.3f])poly_circle(r=%f); \/\/via\n",
+                  u2mm(V.x) , u2mm(V.y) , u2mm(V.drill)/2);
+              else if(use_extrude)
+                printf("\t\t\ttranslate([%.3f,%.3f])circle(r=%f,$fn=fn); \/\/via\n",
+                  u2mm(V.x) , u2mm(V.y) , u2mm(V.drill)/2);
+              else if(use_polyholes)
+                printf("\t\t\ttranslate([%.3f,%.3f,-eta])poly_cylinder(r=%f, h=board_thickness+eta*2); \/\/via\n",
+                  u2mm(V.x) , u2mm(V.y) , u2mm(V.drill)/2);
+              else
+                printf("\t\t\ttranslate([%.3f,%.3f,-eta])cylinder(r=%f, h=board_thickness+eta*2,$fn=fn); \/\/via\n",
+                  u2mm(V.x) , u2mm(V.y) , u2mm(V.drill)/2); 
+            }
+          }
+        }
+
+      B.elements(E)
+      {
+        E.package.contacts(C)
+        {
+          if (C.pad)
+            {
+              holes++;
+              if(use_extrude && use_polyholes)
+                printf("\t\t\ttranslate([%.3f,%.3f])poly_circle(r=%f); \/\/%s %s\n",
+                  u2mm(C.x) , u2mm(C.y) , u2mm(C.pad.drill)/2, E.package.name, C.name);
+               else if(use_extrude)
+                 printf("\t\t\ttranslate([%.3f,%.3f])circle(r=%f,$fn=fn); \/\/%s %s\n",
+                   u2mm(C.x) , u2mm(C.y) , u2mm(C.pad.drill)/2, E.package.name, C.name);
+               else if(use_polyholes)
+                 printf("\t\t\ttranslate([%.3f,%.3f,-eta])poly_cylinder(r=%f, h=board_thickness+eta*2); \/\/%s %s\n",
+                   u2mm(C.x) , u2mm(C.y) , u2mm(C.pad.drill)/2, E.package.name, C.name);
+               else
+                 printf("\t\t\ttranslate([%.3f,%.3f,-eta])cylinder(r=%f, h=board_thickness+eta*2,$fn=fn); \/\/%s %s\n",
+                   u2mm(C.x) , u2mm(C.y) , u2mm(C.pad.drill)/2, E.package.name, C.name);
+            }
+        }
+      }
+
+      //brace to end the differenc eof the board and holes
+      printf("\t\t}\n");
+
+      if( board_only == 0)
+        {
+          // add components coordinates
+          real angle, angle2, z2;
+          int skip;
+          string package_name;
+          string attr_str;
+          string temp_str[];
+          int nb_fields_attr, offset;
+
+
+          B.elements(E)
+          {
+            skip = 0;
+            //***5.9
+            if( EAGLE_VERSION >= 5 )
+              {
+                E.attributes(A)
+                {
+                  if( A.name == "NO_BOM" )
+                    skip = 1;
+                }
+              }
+            //***
+            if( !skip )
+              {
+                real z;
+                if( E.mirror )
+                  {
+                    z=board_thickness/-2;
+                    angle = (( E.angle + 180.0)>=360.0) ? ( E.angle - 180.0) : ( E.angle + 180.0); // modulus
+                  }
+                else
+                  {
+                    z=board_thickness/2;
+                    angle = E.angle;
+                  }
+
+                // Cleanup package name for OpenSCAD
+                package_name = E.package.name;
+                package_name = replace_string( package_name , "/" , "_" );
+                package_name = replace_string( package_name , "," , "_" );
+                package_name = replace_string( package_name , "-" , "_" );
+                package_name = replace_string( package_name , "." , "_" );
+                if(is_number(package_name))
+                    sprintf(package_name, "_%s", package_name);
+
+
+                //***5.9
+                if( EAGLE_VERSION >= 5 )
+                  {
+                    // it is possible to specify a different model name than the footprint name, also in the schematics and board, possible to overide the attribute
+                    E.attributes(A)
+                    {
+                      if( A.name == "EAGLEUP" )
+                        if( A.value != "" )
+                          {
+                            attr_str = A.value;
+                            nb_fields_attr = strsplit( temp_str , attr_str , ';' );	// name and arguments are ; separated
+
+                            while( strsub( temp_str[0] , 0 , 1) == " " ) // remove all spaces at beginning and end of temp_str[0]
+                              temp_str[0] = strsub( temp_str[0] , 1);
+                            while( strsub( temp_str[0] , strlen(temp_str[0])-1) == " " )
+                              temp_str[0] = strsub( temp_str[0] , 0 , strlen(temp_str[0])-1);
+
+                            if( temp_str[0] != "")
+                              package_name = temp_str[0]; // name of part is first
+                            if( nb_fields_attr > 1)
+                              {
+                                while( strsub( temp_str[1] , 0 , 1) == " " ) // remove all spaces at beginning and end of temp_str[1]
+                                  temp_str[1] = strsub( temp_str[1] , 1);
+                                while( strsub( temp_str[1] , strlen(temp_str[1])-1) == " " )
+                                  temp_str[1] = strsub( temp_str[1] , 0 , strlen(temp_str[1])-1);
+
+                                if( nb_fields_attr > 2)
+                                  {
+
+                                    while( strsub( temp_str[2] , 0 , 1) == " " ) // remove all spaces at beginning and end of temp_str[2]
+                                      temp_str[2] = strsub( temp_str[2] , 1);
+                                    while( strsub( temp_str[2] , strlen(temp_str[1])-1) == " " )
+                                      temp_str[2] = strsub( temp_str[2] , 0 , strlen(temp_str[2])-1);
+
+                                    string z_unit = "mm"; // default unit
+                                    if( strlwr( strsub( temp_str[2] , strlen(temp_str[2])-3) ) == "mm" )
+                                      {
+                                        z_unit = "mm";
+                                        temp_str[2] = strsub( temp_str[2] , 0 , strlen(temp_str[2])-2);
+                                      }
+                                    else if( strlwr( strsub( temp_str[2] , strlen(temp_str[2])-3) ) == "in" )
+                                      {
+                                        z_unit = "in";
+                                        temp_str[2] = strsub( temp_str[2] , 0 , strlen(temp_str[2])-2);
+                                      }
+                                    else if( strlwr( strsub( temp_str[2] , strlen(temp_str[2])-4) ) == "mil" )
+                                      {
+                                        z_unit = "mil";
+                                        temp_str[2] = strsub( temp_str[2] , 0 , strlen(temp_str[2])-3);
+                                      }
+                                    else if( strlwr( strsub( temp_str[2] , strlen(temp_str[2])-5) ) == "mils" )
+                                      {
+                                        z_unit = "mils";
+                                        temp_str[2] = strsub( temp_str[2] , 0 , strlen(temp_str[2])-4);
+                                      }
+
+                                    while( strsub( temp_str[2] , strlen(temp_str[2])-1) == " " ) // clean ending
+                                      temp_str[2] = strsub( temp_str[2] , 0 , strlen(temp_str[2])-1);
+
+                                    // replace any comma by a dot
+                                    string z_array[];
+                                    strsplit(z_array, temp_str[2], ',');
+                                    temp_str[2] = strjoin(z_array, '.');
+
+                                    real z_offset = strtod( temp_str[2] ); // conversion to decimal
+                                    if( z_unit == "mm" )
+                                      z += z_offset;
+                                    if( z_unit == "in" )
+                                      z += z_offset * 25.4; // unit conversion
+                                    if( z_unit == "mil" )
+                                      z += z_offset * 25.4 / 1000;
+                                    if( z_unit == "mils" )
+                                      z += z_offset * 25.4 / 1000;
+
+                                  }
+
+                                z2=z;
+                                angle2=angle;
+                                offset=0;
+                                if( strsub( temp_str[1] , offset , 1) == "M" ) // mirror
+                                  {
+                                    offset ++;
+                                    z2 *= -1.0;
+                                    angle2 += 180;
+                                  }
+                                if( strsub( temp_str[1] , offset , 1) == "R" ) // rotation
+                                  {
+                                    offset ++;
+                                    angle2 += strtod( strsub( temp_str[1] , offset )); // angle
+                                  }
+                                angle2 = (angle2>=360.0) ? ( angle2 - 360.0) : ( angle2); // modulus
+                                angle2 = (angle2>=360.0) ? ( angle2 - 360.0) : ( angle2); // modulus
+                                angle = angle2;
+                                z= z2;
+                              }
+                          }
+                    }
+                    package_name = replace_string( package_name , ".scad" , "" );
+                  }
+                //***
+                printf("\t\ttranslate([%.3f,%.3f,0])",
+                       u2mm(E.x), u2mm(E.y));
+                if(angle)
+                  printf("rotate([0,0,%.0f])", angle);
+                printf("%s();  \/\/%s %s\n", package_name, E.name, E.value);
+              }
+          }
+        }
+      printf("\t}\n}\n\n%s(); //Show module\n", module_name);
+      // Details about the file format
+      printf("//Created by generate-scad.ulp version %d.%d\n", major_version , minor_version);
+    }
+
+    dlgMessageBox( "generate-scad.ulp " + genscad_version + " : <b>export completed</b>" );
+    exit (0);
+  }
+else // if not launched from a board
+  {
+    dlgMessageBox("\n    Please launch this ULP in a Board    \n");
+    exit (0);
+  }
+/* end of file */

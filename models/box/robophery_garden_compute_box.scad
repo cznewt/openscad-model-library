@@ -2,10 +2,10 @@
 robophery garden compute box
 */
 
-include <../../lib/connector/connectoreuro.scad>;
-include <../../lib/connector/connectorkeystone.scad>;
-include <../../lib/button/buttonorthogonal.scad>;
-include <../../lib/box/boxwaterproof.scad>;
+include <../../lib/connector/connector_euro.scad>;
+include <../../lib/connector/connector_keystone.scad>;
+include <../../lib/button/button_orthogonal.scad>;
+include <../../lib/box/box_waterproof.scad>;
 
 boxClearance = 0.1;
 boxWallThickness=3;

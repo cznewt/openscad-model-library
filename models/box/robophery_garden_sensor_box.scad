@@ -1,17 +1,18 @@
 /* 
-relay box
+robophery garden sensor box
 */
 
-include <../../lib/connector/connector_euro.scad>;
 include <../../lib/connector/connector_keystone.scad>;
-include <../../lib/button/button_orthogonal.scad>;
+include <../../lib/connector/connector_coaxial.scad>;
+include <../../lib/connector/connector_orthogonal.scad>;
 
+/* [Box Options] */
 // Dimension: Box outer X-Size [mm]
 box_Size_X          = 110;
 // Dimension: Box outer Y-Size [mm]
-box_Size_Y          = 150;
+box_Size_Y          = 95;
 // Dimension: Box Inner height [mm]
-box_Inner_Height    = 62;
+box_Inner_Height    = 36;
 // Box bottom/top thickness
 box_BottomTop_Thickness =  1.5; // [0.6:0.2:3]
 // Edge corner radius 
@@ -38,6 +39,7 @@ screwnose_Height        = 5; // [2:0.2:10]
 screwnose_Wall_Thickness = 2.8; // [2:0.2:5]
 
 boxClearance = 0.1;
+
 
 // **************************
 // ** Calculated globals
@@ -73,31 +75,24 @@ module box() {
 		// ** YOUR OWN CUTOUTS HERE!
 		// **************************
 
-        // power output connectors
-        translate([box_Wall_Thickness/2,27+0*32, 32]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness,boxClearance);
+        // Atlassian connectors - Coaxials        
+        translate([box_Wall_Thickness/2,22+0*15.3,22]) rotate([90,90,90])
+          connector_AtlasScientific_EZO(box_Wall_Thickness,boxClearance);
+        translate([box_Wall_Thickness/2,22+1*15.3,22]) rotate([90,90,90])
+          connector_AtlasScientific_EZO(box_Wall_Thickness,boxClearance);
 
-        translate([box_Wall_Thickness/2,27+1*32, 32]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness,boxClearance);
-
-        translate([box_Wall_Thickness/2,27+2*32, 32]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness,boxClearance);
-
-        translate([box_Wall_Thickness/2,27+3*32, 32]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness,boxClearance);
-
-        // power input button
-        translate([box_Size_X-box_Wall_Thickness/2, 20, 32]) rotate([90,90,270])
-          button_P_H8550VB01(box_Wall_Thickness,boxClearance);
-
-        // power input connector
-        translate([box_Size_X-box_Wall_Thickness/2, 45, 32]) rotate([90,90,90])
-          connector_Schurter_6100_4(box_Wall_Thickness,boxClearance);
+        // PSH02 connectors - I2C and 1Wire
+        translate([box_Wall_Thickness/2,57+0*2.54,22]) rotate([90,180,90])
+          connector_PSH02(4,box_Wall_Thickness,boxClearance);
+        translate([box_Wall_Thickness/2,57+4*2.54,22]) rotate([90,180,90])
+          connector_PSH02(4,box_Wall_Thickness,boxClearance);
+        translate([box_Wall_Thickness/2,57+8*2.54,22-1.25]) rotate([90,180,90])
+          connector_PSH02(3,box_Wall_Thickness,boxClearance);
 
         // keystone data connector
-        translate([box_Size_X-box_Wall_Thickness/2, box_Size_Y-35, 32]) rotate([90,0,90])
+        translate([box_Size_X-box_Wall_Thickness/2, box_Size_Y-35, 20]) rotate([90,0,90])
           connector_keystone_cat5e(box_Wall_Thickness,boxClearance);
- 
+        
 		// **************************
 		// ** / CUTOUTS
 		// **************************
@@ -176,7 +171,6 @@ module screwNose(screwholeDiameter=4, noseHeight=5) {
 		cylinder(r=screwholeDiameter/2, h=noseHeight, $fn=60);
 	}
 }
-
 box();
 if (box_Size_X>box_Size_Y) {
 	//translate([0, box_Size_Y+5+screwnose_Diameter+--screwnose_Wall_Thickness, 0]) lid();	

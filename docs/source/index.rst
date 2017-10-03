@@ -8,3 +8,4 @@ OpenSCAD Model Library
    :glob:
 
    lib.rst
+   models.rst

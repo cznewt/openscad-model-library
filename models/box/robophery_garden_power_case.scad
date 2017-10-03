@@ -1,5 +1,5 @@
 /* 
-robophery garden power box
+robophery garden power box case
 */
 
 include <../../lib/connector/connector_euro.scad>;

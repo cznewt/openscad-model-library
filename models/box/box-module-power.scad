@@ -37,7 +37,7 @@ screwnose_Height        = 5; // [2:0.2:10]
 // Wall thickness
 screwnose_Wall_Thickness = 2.8; // [2:0.2:5]
 
-euroOffset = 15;
+euroOffset = 25;
 euroHeight = 24.25;
 euroWidth = 32;
 euroRadius = 4;
@@ -47,6 +47,8 @@ euroCorner = 6;
 
 keystoneOffset = 20;
 keystoneHeight = 12;
+
+boxClearance = 0.1;
 
 
 // **************************
@@ -84,30 +86,30 @@ module box() {
 		// **************************
 
         // power output connectors
-        translate([-0.1,15+0*32, 50]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness+0.2);
+        translate([box_Wall_Thickness/2,27+0*32, 32]) rotate([90,90,90])
+          connector_GSD4(box_Wall_Thickness,boxClearance);
 
-        translate([-0.1,15+1*32, 50]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness+0.2);
+        translate([box_Wall_Thickness/2,27+1*32, 32]) rotate([90,90,90])
+          connector_GSD4(box_Wall_Thickness,boxClearance);
 
-        translate([-0.1,15+2*32, 50]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness+0.2);
+        translate([box_Wall_Thickness/2,27+2*32, 32]) rotate([90,90,90])
+          connector_GSD4(box_Wall_Thickness,boxClearance);
 
-        translate([-0.1,15+3*32, 50]) rotate([90,90,90])
-          connector_GSD4(box_Wall_Thickness+0.2);
+        translate([box_Wall_Thickness/2,27+3*32, 32]) rotate([90,90,90])
+          connector_GSD4(box_Wall_Thickness,boxClearance);
 
         // power input button
-        translate([-0.1+box_Size_X-box_Wall_Thickness, 15, 45]) rotate([90,90,90])
-          button_P_H8550VB01(box_Wall_Thickness+0.2);
+        translate([box_Size_X-box_Wall_Thickness/2, 20, 32]) rotate([90,90,270])
+          button_P_H8550VB01(box_Wall_Thickness,boxClearance);
 
         // power input connector
-        translate([0.1+box_Size_X, 60, 50]) rotate([90,90,270])
-          connector_Schurter_6100_4(box_Wall_Thickness+0.2);
+        translate([box_Size_X-box_Wall_Thickness/2, 45, 32]) rotate([90,90,90])
+          connector_Schurter_6100_4(box_Wall_Thickness,boxClearance);
 
         // keystone data connector
-        translate([+0.1+box_Size_X, 125, 25]) rotate([90,0,270])
-          connector_keystone_cat5e(box_Wall_Thickness+0.2);
-
+        translate([box_Size_X-box_Wall_Thickness/2, box_Size_Y-35, 32]) rotate([90,0,90])
+          connector_keystone_cat5e(box_Wall_Thickness,boxClearance);
+ 
 		// **************************
 		// ** / CUTOUTS
 		// **************************

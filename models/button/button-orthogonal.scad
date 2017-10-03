@@ -1,12 +1,16 @@
 
-module button_P_H8550VB01(depth) {
-  height = 13;
-  width = 19.2;
-  button_orthogonal(width, height, depth);
+//button_P_H8550VB01(3,.1);
+
+module button_P_H8550VB01(depth,clear)
+{
+    height = 13;
+    width = 19.2;
+    depth = depth+clear;
+
+    button_orthogonal(width,height,depth,clear);
 }
 
-module button_orthogonal(width, height, depth) {
-  cube([width, height, depth]);
+module button_orthogonal(width,height,depth,clear)
+{
+    cube([width+clear,height+clear,depth+clear],center=true);
 }
-
-// button_P_H8550VB01(3);

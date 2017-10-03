@@ -16,8 +16,8 @@ module connector_keystone(lock_width,depth,clear)
     lock_depth = 1.3;
     lock_offset = (lock_width-width)/2;
 
-    translate([0,0,0])
-        cube([lock_width,height,depth-lock_depth],center=true);
-    translate([0,0,depth/2])
-        cube([width,height,lock_depth],center=true);
+    translate([-lock_width/2,-height/2,-depth/2])
+        cube([lock_width,height,depth-lock_depth]);
+    translate([-width/2,-height/2,depth/2-lock_depth])
+        cube([width,height,lock_depth]);
 }

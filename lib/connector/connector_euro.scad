@@ -1,4 +1,6 @@
 
+include <../nut/nut_hexagonal.scad>;
+
 //connector_GSD4(3,0.1);
 //connector_Schurter_6100_4(3,0.1);
 
@@ -39,6 +41,8 @@ module connector_euro_hole(diameter,depth,clear)
     radius = diameter/2 + clear;
 
     cylinder(r=radius, h=depth,center=true);
+    translate([0,0,2-depth])
+        nut_M(6,1,clear);
 }
 
 module connector_euro_lock(width,height,depth,clear)

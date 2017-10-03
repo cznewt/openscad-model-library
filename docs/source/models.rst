@@ -3,23 +3,32 @@
 Complete models
 ===============
 
-RoboPhery Garden
-================
+RoboPhery Garden Project
+========================
 
-Power Box
+Compute box
+-----------
+
+.. image:: img/compute_box_case.png
+   :scale: 25 %
+
+.. image:: img/compute_box_lid.png
+   :scale: 25 %
+
+Power box
 ---------
 
-.. image:: img/robophery_garden_power_case.png
-   :scale: 50 %
+.. image:: img/power_box_case.png
+   :scale: 25 %
 
-.. image:: img/robophery_garden_power_lid.png
-   :scale: 50 %
+.. image:: img/power_box_lid.png
+   :scale: 25 %
 
-Sensor Box
+Sensor box
 ----------
 
-.. image:: img/robophery_garden_sensor_case.png
-   :scale: 50 %
+.. image:: img/sensor_box_case.png
+   :scale: 25 %
 
-.. image:: img/robophery_garden_sensor_lid.png
-   :scale: 50 %
+.. image:: img/sensor_box_lid.png
+   :scale: 25 %

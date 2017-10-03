@@ -7,7 +7,7 @@ include <../../lib/connector/connector_keystone.scad>;
 include <../../lib/button/button_orthogonal.scad>;
 include <../../lib/box/box_waterproof.scad>;
 
-boxSizeX=110;
+boxSizeX=125;
 boxSizeY=95;
 boxInnerHeight=36;
 boxBottomTopThickness=1.5;

@@ -1,34 +1,20 @@
-//nut_M2(1,0.1);
-//nut_M2_5(1,0.1);
-//nut_M3(1,0.1);
-//nut_M10(1,0.1);
 
-module nut_M2(height,clear)
+//nut_M(3,1,0.1);
+//nut_M(6,1,0.1);
+//nut_M_border(6,10,3,0.1);
+
+module nut_M(size,height,clear)
 {
-    radius = 2;
-
-    nut_hexagonal(radius,height,clear);
+    nut_hexagonal(size,height,clear);
 }
 
-module nut_M2_5(height,clear)
+module nut_M_border(size,radius,height,clear)
 {
-    radius = 2.5;
-
-    nut_hexagonal(radius,height,clear);
-}
-
-module nut_M3(height,clear)
-{
-    radius = 3;
-
-    nut_hexagonal(radius,height,clear);
-}
-
-module nut_M10(height,clear)
-{
-    radius = 10;
-
-    nut_hexagonal(radius,height,clear);
+    difference() {
+        //cylinder(r=radius, h=height,center=true);
+        nut_hexagonal(radius,height,clear);
+        nut_hexagonal(size,height,clear);
+    }
 }
 
 module nut_hexagonal(radius,height,clear)
@@ -47,5 +33,4 @@ module nut_hexagonal(radius,height,clear)
 		rotate([0,0,2*angle])
 			cube([radius,cote,height],center=true);
 	}
-
 }

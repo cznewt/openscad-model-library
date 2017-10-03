@@ -3,15 +3,17 @@ Inspired by D-Sub connector library by 'dpeart'
 http://forums.reprap.org/read.php?313,577003
 */
 
-//connector_dsub_9F(10,0.1);
-//connector_dsub_9R(10,0.1);
-//connector_dsub_15F(10,0.1);
-//connector_dsub 15R(10,0.1);
-//connector_dsub_25F(10,0.1);
-//connector_dsub_25R(10,0.1);
-//connector_dsub_37F(10,0.1);
-//connector_dsub_37R(10,0.1);
-//connector_dsub_50F(10,0.1);
+include <../nut/nut_hexagonal.scad>;
+
+//connector_dsub_9F(3,0.1);
+//connector_dsub_9R(3,0.1);
+//connector_dsub_15F(3,0.1);
+//connector_dsub_15R(3,0.1);
+//connector_dsub_25F(3,0.1);
+//connector_dsub_25R(3,0.1);
+//connector_dsub_37F(3,0.1);
+//connector_dsub_37R(3,0.1);
+//connector_dsub_50F(3,0.1);
 //connector_dsub_50R(10,0.1);
 
 module connector_dsub_9F(depth,clear)
@@ -107,8 +109,12 @@ module connector_dsub(dimensions,depth,clear)
 
             translate([-b,0,-h/2])
                 cylinder(h=h, d=g+mounting_hole, $fn=6);
+            translate([-b,0,-h/2+0.5])
+                nut_M(5,1,clear);
             translate([b,0,-h/2])
                 cylinder(h=h, d=g+mounting_hole, $fn=6);
+            translate([b,0,-h/2+0.5])
+                nut_M(5,1,clear);
         }
     }
 }

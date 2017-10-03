@@ -1,7 +1,7 @@
 
-================
-OpenSCAD Library
-================
+======================
+OpenSCAD Model Library
+======================
 
 .. toctree::
    :maxdepth: 2

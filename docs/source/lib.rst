@@ -7,21 +7,30 @@ Generic components
 Connector holes
 ===============
 
-.. figure:: img/euro_GSD4.png
+EURO connector GSD4
+-------------------
+
+.. image:: img/euro_GSD4.png
    :scale: 50 %
 
-   EURO connector GSD4
+EURO connector Schurter 6100-4
+------------------------------
 
-.. figure:: img/euro_Schurter_6100_4.png
+.. image:: img/euro_Schurter_6100_4.png
    :scale: 50 %
 
-   EURO connector Schurter 6100-4
+Keystone CAT 5e
+---------------
+
+.. image:: img/keystone_cat5e.png
+   :scale: 50 %
 
 
 Button holes
 ============
 
-.. figure:: img/button_P_H8550VB01.png
-   :scale: 50 %
+Button P-H8550VB01
+------------------
 
-   Button P-H8550VB01
+.. image:: img/button_P_H8550VB01.png
+   :scale: 50 %

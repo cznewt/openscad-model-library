@@ -10,8 +10,8 @@ module connector_keystone_cat5e(depth,clear)
 
 module connector_keystone(lock_width,depth,clear)
 {
-    height = 20+clear;
-    width = 14.5+clear;
+    height = 20+2*clear;
+    width = 14.5+2*clear;
     depth = depth+clear;
     lock_depth = 1.3;
     lock_offset = (lock_width-width)/2;

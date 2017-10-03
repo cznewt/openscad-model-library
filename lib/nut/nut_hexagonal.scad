@@ -1,6 +1,6 @@
 //nut_M2(1,0.1);
 //nut_M2_5(1,0.1);
-nut_M3(1,0.1);
+//nut_M3(1,0.1);
 //nut_M10(1,0.1);
 
 module nut_M2(height,clear)
@@ -33,7 +33,8 @@ module nut_M10(height,clear)
 
 module nut_hexagonal(radius,height,clear)
 {
-	radius = radius;
+    height = height+clear;
+	radius = radius+clear;
     angle = 360/6;
 	cote = (radius)/tan(angle);
 

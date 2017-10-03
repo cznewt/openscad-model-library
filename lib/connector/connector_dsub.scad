@@ -82,7 +82,7 @@ module connector_dsub(dimensions,depth,clear)
     d = dimensions[1];
     f = dimensions[2];
     k = dimensions[3];
-    h = depth;
+    h = depth+clear;
     g = clear;
 
     cut_angle = 10;

@@ -34,6 +34,26 @@ Raspberry Pi
    :alt: Raspberry Pi Zero
 
 
+Box corner models
+=================
+
+
+Rectangular shape
+-----------------
+
+.. image:: img/rect_2cm_bot_corner.png
+   :scale: 25 %
+   :alt: Bottom corner
+
+.. image:: img/rect_2cm_mid_corner.png
+   :scale: 25 %
+   :alt: Middle corner
+
+.. image:: img/rect_2cm_mid_t.png
+   :scale: 25 %
+   :alt: Middle T
+
+
 Connector extrusions
 ====================
 

@@ -3,6 +3,8 @@ Inspired by D-Sub connector library by 'dpeart'
 http://forums.reprap.org/read.php?313,577003
 */
 
+sides = 100;
+
 include <../nut/nut_hexagonal.scad>;
 
 //connector_dsub_9F(3,0.1);
@@ -78,7 +80,6 @@ module connector_dsub_50R(depth,clear)
 
 module connector_dsub(dimensions,depth,clear)
 {
-    sides = 20;
     
     b = dimensions[0];
     d = dimensions[1];
@@ -108,11 +109,11 @@ module connector_dsub(dimensions,depth,clear)
             }
 
             translate([-b,0,-h/2])
-                cylinder(h=h, d=g+mounting_hole, $fn=6);
+                cylinder(h=h, d=g+mounting_hole, $fn=sides);
             translate([-b,0,-h/2+0.5])
                 nut_M(5,1,clear);
             translate([b,0,-h/2])
-                cylinder(h=h, d=g+mounting_hole, $fn=6);
+                cylinder(h=h, d=g+mounting_hole, $fn=sides);
             translate([b,0,-h/2+0.5])
                 nut_M(5,1,clear);
         }

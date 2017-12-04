@@ -1,6 +1,8 @@
 
 include <../nut/nut_hexagonal.scad>;
 
+sides = 100;
+
 //connector_GSD4(3,0.1);
 //connector_Schurter_6100_4(3,0.1);
 
@@ -40,7 +42,7 @@ module connector_euro_hole(diameter,depth,clear)
 {
     radius = diameter/2 + clear;
 
-    cylinder(r=radius, h=depth,center=true);
+    cylinder(r=radius, h=depth,center=true,$fn=sides);
     translate([0,0,2-depth])
         nut_M(6,1,clear);
 }
@@ -65,16 +67,16 @@ module connector_euro(height,width,depth,radius,corner,clear)
 
     hull(){
         translate([radius-width_axis, radius-height_axis, 0])
-            cylinder(r=radius, h=depth,center=true);
+            cylinder(r=radius, h=depth,center=true, $fn=sides);
         translate([width_axis-radius, radius-height_axis, 0])
-            cylinder(r=radius, h=depth,center=true);
+            cylinder(r=radius, h=depth,center=true, $fn=sides);
         translate([radius-width_axis, height_axis-radius-corner, 0])
-            cylinder(r=radius, h=depth,center=true);
+            cylinder(r=radius, h=depth,center=true, $fn=sides);
         translate([radius+corner-width_axis, height_axis-radius, 0])
-            cylinder(r=radius, h=depth,center=true);
+            cylinder(r=radius, h=depth,center=true, $fn=sides);
         translate([width_axis-radius, height_axis-radius-corner, 0])
-            cylinder(r=radius, h=depth,center=true);
+            cylinder(r=radius, h=depth,center=true, $fn=sides);
         translate([width_axis-radius-corner, height_axis-radius, 0])
-            cylinder(r=radius, h=depth,center=true);
+            cylinder(r=radius, h=depth,center=true, $fn=sides);
     }
 }

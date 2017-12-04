@@ -3,7 +3,7 @@
 
 module connector_USB02(depth,clear)
 {
-    width = 13.1+3;
+    width = 13.1+3; // 3 width of connectors
     height = 14.3;
 
     connector_orthogonal(height,width,depth,clear);

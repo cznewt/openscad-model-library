@@ -2,6 +2,7 @@
 robophery garden power box case
 */
 
+include <../../lib/connector/connector_euro.scad>;
 include <../../lib/connector/connector_power.scad>;
 include <../../lib/connector/connector_keystone.scad>;
 include <../../lib/button/button_orthogonal.scad>;
@@ -9,8 +10,8 @@ include <../../lib/nut/nut_hexagonal.scad>;
 include <../../lib/box/box_waterproof.scad>;
 
 boxSizeX=110;
-boxSizeY=230;
-boxInnerHeight=80;
+boxSizeY=250;
+boxInnerHeight=65;
 boxBottomTopThickness=1.5;
 boxScrewCornerRadius=6;
 boxScrewDiameter=3.2;
@@ -44,28 +45,19 @@ difference() {
             boxClearance=boxClearance
         );
 
-        // relay holders
-        translate([boxSizeX-15,boxSizeY-20,boxBottomTopThickness+1.5])
-            nut_M_border(5,9,5,boxClearance);
-        translate([boxSizeX-15,boxSizeY-20-70,boxBottomTopThickness+1.5])
-            nut_M_border(5,9,5,boxClearance);
-        translate([boxSizeX-15-48.5,boxSizeY-20,boxBottomTopThickness+1.5])
-            nut_M_border(5,9,5,boxClearance);
-        translate([boxSizeX-15-48.5,boxSizeY-20-70,boxBottomTopThickness+1.5])
-            nut_M_border(5,9,5,boxClearance);
     }
     // power output connectors
-    translate([boxWallThickness/2,27+0*55, 44]) rotate([90,90,270])
-        connector_IP54(boxWallThickness,boxClearance);
+    translate([boxWallThickness/2,27+15+0*55, 34]) rotate([90,90,270])
+        connector_IP54(boxWallThickness,boxClearance+0.1);
 
-    translate([boxWallThickness/2,27+1*55, 44]) rotate([90,90,270])
-        connector_IP54(boxWallThickness,boxClearance);
+    translate([boxWallThickness/2,27+15+1*55, 34]) rotate([90,90,270])
+        connector_IP54(boxWallThickness,boxClearance+0.1);
 
-    translate([boxWallThickness/2,27+2*55, 44]) rotate([90,90,270])
-        connector_IP54(boxWallThickness,boxClearance);
+    translate([boxWallThickness/2,27+15+2*55, 34]) rotate([90,90,270])
+        connector_IP54(boxWallThickness,boxClearance+0.1);
 
-    translate([boxWallThickness/2,27+3*55, 44]) rotate([90,90,270])
-        connector_IP54(boxWallThickness,boxClearance);
+    translate([boxWallThickness/2,27+15+3*55, 34]) rotate([90,90,270])
+        connector_IP54(boxWallThickness,boxClearance+0.1);
 
     // power input button
     translate([boxSizeX-boxWallThickness/2, 25, 44]) rotate([90,90,270])

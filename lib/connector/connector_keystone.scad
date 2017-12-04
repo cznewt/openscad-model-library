@@ -1,5 +1,5 @@
 
-//connector_keystone_cat5e(30,0.1);
+// connector_keystone_cat5e(3,0.1);
 
 module connector_keystone_cat5e(depth,clear)
 {

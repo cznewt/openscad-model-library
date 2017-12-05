@@ -45,11 +45,11 @@ Rectangular shape
    :scale: 25 %
    :alt: Bottom corner
 
-.. image:: img/rect_2cm_mid_corner.png
+.. image:: img/rect_3cm_mid_corner.png
    :scale: 25 %
    :alt: Middle corner
 
-.. image:: img/rect_2cm_mid_t.png
+.. image:: img/rect_4cm_mid_t.png
    :scale: 25 %
    :alt: Middle T
 

@@ -2,10 +2,10 @@
 robophery garden power box lid
 */
 
-include <../../lib/connector/connector_euro.scad>;
-include <../../lib/connector/connector_keystone.scad>;
-include <../../lib/button/button_orthogonal.scad>;
-include <../../lib/box/box_waterproof.scad>;
+include <../../../lib/connector/connector_euro.scad>;
+include <../../../lib/connector/connector_keystone.scad>;
+include <../../../lib/button/button_orthogonal.scad>;
+include <../../../lib/box/box_waterproof.scad>;
 
 boxSizeX=110;
 boxSizeY=150;

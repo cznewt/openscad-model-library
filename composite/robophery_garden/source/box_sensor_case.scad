@@ -2,10 +2,10 @@
 robophery garden compute box
 */
 
-include <../../lib/connector/connector_keystone.scad>;
-include <../../lib/connector/connector_coaxial.scad>;
-include <../../lib/connector/connector_orthogonal.scad>;
-include <../../lib/box/box_waterproof.scad>;
+include <../../../lib/connector/connector_keystone.scad>;
+include <../../../lib/connector/connector_coaxial.scad>;
+include <../../../lib/connector/connector_orthogonal.scad>;
+include <../../../lib/box/box_waterproof.scad>;
 
 boxSizeX=125;
 boxSizeY=95;

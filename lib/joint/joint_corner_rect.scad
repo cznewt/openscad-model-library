@@ -11,7 +11,7 @@ module connector_mid_front_corner(hole_diameter,hull_length,hull_thickness,clear
 {
   hull_diameter = hole_diameter+2*hull_thickness;
   hull_offset = hull_length/2+hull_diameter/2;
-  screw_hole_diameter = [0,0,3,10,10,3];
+  screw_hole_diameter = [0,0,5,12,0,0];
 
   connector_corner_brick(hole_diameter,hull_thickness,screw_hole_diameter,clear);
   translate([0,hull_offset,0])
@@ -32,7 +32,7 @@ module connector_mid_back_corner(hole_diameter,hull_length,hull_thickness,clear)
 {
   hull_diameter = hole_diameter+2*hull_thickness;
   hull_offset = hull_length/2+hull_diameter/2;
-  screw_hole_diameter = [10,0,3,10,10,3];
+  screw_hole_diameter = [0,0,5,12,0,0];
 
   connector_corner_brick(hole_diameter,hull_thickness,screw_hole_diameter,clear);
   translate([0,hull_offset,0])
@@ -67,7 +67,7 @@ module connector_top_bot_corner(hole_diameter,hull_length,hull_thickness,clear)
   hull_diameter = hole_diameter+2*hull_thickness;
   hull_offset = hull_length/2+hull_diameter/2;
 
-  screw_hole_diameter = [10,0,3,10,10,3];
+  screw_hole_diameter = [0,0,5,12,12,5];
 
   connector_corner_brick(hole_diameter,hull_thickness,screw_hole_diameter,clear);
   translate([0,hull_offset,0])
@@ -130,15 +130,15 @@ module connector_corner_square(hole_diameter,hull_thickness,hull_length,hull_cle
       translate([-hole_diameter/2,-hole_length/2,-hole_diameter/2])
         cube([hole_diameter,hole_length,hole_diameter]);
       translate([0,0,-hole_diameter/2-hull_thickness-clear/2])
-        cylinder(h=hull_thickness+0.1, d=3, $fn=sides);
+        cylinder(h=hull_thickness+0.1, d=5, $fn=sides);
       translate([0,0,hole_diameter/2-clear/2])
-        cylinder(h=hull_thickness+0.1, d=3, $fn=sides);
+        cylinder(h=hull_thickness+0.1, d=5, $fn=sides);
       translate([hole_diameter/2-clear/2,0,0])
         rotate([0,90,0])
-          cylinder(h=hull_thickness+0.1, d=3, $fn=sides);
+          cylinder(h=hull_thickness+0.1, d=5, $fn=sides);
       translate([-hole_diameter/2-hull_thickness-clear/2,0,0])
         rotate([0,90,0])
-          cylinder(h=hull_thickness+0.1, d=3, $fn=sides);
+          cylinder(h=hull_thickness+0.1, d=5, $fn=sides);
 
       if(hull_clear[0] == 0) {
         translate([-hole_diameter/2,-hole_length/2,hole_diameter/2-clear/2])
@@ -172,7 +172,7 @@ module connector_corner_holder(hull_thickness,hull_length,clear)
           polygon(points=[[0,0],[hull_length,0],[0,hull_length]], paths=[[0,1,2]]);
         }
         translate([hull_length/3.14,hull_length/3.14,-0.5])
-          cylinder(h=hull_thickness+1, d=3, $fn=sides);
+          cylinder(h=hull_thickness+1, d=5, $fn=sides);
 
     }
 }

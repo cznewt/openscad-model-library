@@ -1,11 +1,45 @@
 
 sides = 100;
 
-//connector_mid_front_corner(20.1,50,2.5,0.1);
+//connector_mid_connect(20.1,50,2.5,0.1);
 
 //connector_mid_back_corner(20.1,50,2.5,0.1);
 
 //connector_top_bot_corner(20.1,50,2.5,0.1);
+
+module connector_mid_connect(hole_diameter,hull_length,hull_thickness,clear)
+{
+  hull_diameter = hole_diameter+2*hull_thickness;
+  hull_offset = hull_length/2+hull_diameter/2;
+  hole_clear = [0,0,0,0,0,0];
+
+//  connector_corner_hollow_brick(hole_diameter,hull_thickness,hole_clear,clear);
+translate([hole_diameter/2+hull_thickness,-hole_diameter/2-hull_thickness,hole_diameter/2])
+  cube([hole_diameter+hull_thickness*2,hole_diameter+hull_thickness*2,hull_thickness+clear]);
+
+
+translate([-hole_diameter/2-hull_thickness,-hole_diameter/2-hull_thickness,-hole_diameter/2-hull_thickness-clear/2])
+  cube([hole_diameter+hull_thickness*2,hole_diameter+hull_thickness*2,hull_thickness+clear]);
+
+translate([-hole_diameter/2,-hole_diameter/2-hull_thickness,-hole_diameter/2-hull_thickness-clear/2])
+  rotate([0,-90,0])
+  cube([hole_diameter+hull_thickness*2,hole_diameter+hull_thickness*2,hull_thickness+clear]);
+
+
+  translate([0,hull_offset,0])
+    connector_corner_square(hole_diameter,hull_thickness,hull_length,[0,1,1,1],clear);
+  translate([0,-hull_offset,0])
+    connector_corner_square(hole_diameter,hull_thickness,hull_length,[0,1,1,1],clear);
+  translate([hull_offset-hull_thickness,0,0])
+    rotate([0,0,90])
+      connector_corner_square(hole_diameter,hull_thickness,hull_length,[1,1,1,1],clear);
+  translate([hull_diameter/2,hull_diameter/2,-hull_diameter/2+hull_thickness/2])    
+    connector_corner_holder(hull_thickness,hull_length*4/5);
+  translate([hull_diameter/2,-hull_diameter/2,-hull_diameter/2+hull_thickness/2])
+    rotate([0,0,270])
+      connector_corner_holder(hull_thickness,hull_length*4/5);
+}
+
 
 module connector_mid_front_corner(hole_diameter,hull_length,hull_thickness,clear)
 {
@@ -113,6 +147,51 @@ module connector_corner_brick(hole_diameter,hull_thickness,screw_hole_diameter,c
       translate([0,hole_diameter/2+hull_thickness+clear/2,0])
         rotate([90,0,0])
           cylinder(h=hull_thickness+0.1, d=screw_hole_diameter[5], $fn=sides);
+    }
+
+}
+
+
+module connector_corner_hollow_brick(hole_diameter,hull_thickness,hull_clear,clear)
+{
+    hull_diameter = hole_diameter+2*hull_thickness;
+    difference() {
+      translate([-hull_diameter/2,-hull_diameter/2,-hull_diameter/2])
+        cube([hull_diameter,hull_diameter,hull_diameter]);
+      translate([-hole_diameter/2,-hole_diameter/2,-hole_diameter/2])
+        translate([-hole_diameter,-hole_diameter,0])
+        cube([hole_diameter*2,hole_diameter*2,hull_thickness]);
+
+      if(hull_clear[0] == 0) {
+      translate([0,0,-hole_diameter/2-hull_thickness-clear/2])
+        translate([-hole_diameter,-hole_diameter,0])
+        cube([hole_diameter*2,hole_diameter*2,hull_thickness]);
+      }
+      if(hull_clear[1] == 0) {
+      translate([0,0,hole_diameter/2-clear/2])
+        translate([-hole_diameter,-hole_diameter,0])
+        cube([hole_diameter*2,hole_diameter*2,hull_thickness]);
+      }
+      if(hull_clear[2] == 0) {
+      translate([hole_diameter/2-clear/2,0,0])
+        rotate([0,90,0])
+          cylinder(h=hull_thickness+0.1, d=screw_hole_diameter[2], $fn=sides);
+      }
+      if(hull_clear[3] == 0) {
+      translate([-hole_diameter/2-hull_thickness-clear/2,0,0])
+        rotate([0,90,0])
+          cylinder(h=hull_thickness+0.1, d=screw_hole_diameter[3], $fn=sides);
+      }
+      if(hull_clear[4] == 0) {
+      translate([0,-hole_diameter/2+clear/2,0])
+        rotate([90,0,0])
+          cylinder(h=hull_thickness+0.1, d=screw_hole_diameter[4], $fn=sides);
+      }
+      if(hull_clear[5] == 0) {
+      translate([0,hole_diameter/2+hull_thickness+clear/2,0])
+        rotate([90,0,0])
+          cylinder(h=hull_thickness+0.1, d=screw_hole_diameter[5], $fn=sides);
+      }
     }
 
 }

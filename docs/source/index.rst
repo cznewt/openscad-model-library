@@ -7,5 +7,6 @@ OpenSCAD Model Library
    :maxdepth: 2
    :glob:
 
-   lib.rst
-   models.rst
+   intro
+   primitives
+   composites

@@ -1,83 +1,84 @@
 
-==================
-Generic components
-==================
+===================
+Reusable Components
+===================
 
 
-Container models
+Container Models
 ================
 
-Waterproof box
+Waterproof Box
 --------------
 
 .. image:: img/waterproof_box_case.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Waterproof box case
 
 .. image:: img/waterproof_box_lid.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Waterproof box lid
 
 
-Device models
+Device Models
 =============
 
 Raspberry Pi
 ------------
 
 .. image:: img/raspberrypi3.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Raspberry Pi 3
 
 .. image:: img/raspberrypi_zero.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Raspberry Pi Zero
 
 
-Box corner models
+Box Corner Models
 =================
 
 
-Rectangular shape
+Rectangular Shape
 -----------------
 
 .. image:: img/rect_2cm_bot_corner.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Bottom corner
 
 .. image:: img/rect_3cm_mid_corner.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Middle corner
 
 .. image:: img/rect_4cm_mid_t.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Middle T
 
 
-Connector extrusions
+Connector Extrusions
 ====================
 
 
-EURO connectors
+EURO Connectors
 ---------------
 
 .. image:: img/euro_GSD4.png
-   :scale: 25 %
+   :width: 45 %
    :alt: EURO connector GSD4
 
 .. image:: img/euro_Schurter_6100_4.png
-   :scale: 25 %
+   :width: 45 %
    :alt: EURO connector Schurter 6100-4
 
-D-SUB connectors
+
+D-SUB Connectors
 ----------------
 
 .. image:: img/dsub_9R.png
-   :scale: 25 %
+   :width: 45 %
    :alt: D-SUB 9R
 
 .. image:: img/dsub_25R.png
-   :scale: 25 %
+   :width: 45 %
    :alt: D-SUB 25R
 
 
@@ -85,14 +86,48 @@ Keystone connectors
 -------------------
 
 .. image:: img/keystone_cat5e.png
-   :scale: 25 %
+   :width: 45 %
    :alt: Keystone CAT 5e
 
-Button extrusions
+
+Button Extrusions
 =================
+
 
 Button P-H8550VB01
 ------------------
 
 .. image:: img/button_P_H8550VB01.png
-   :scale: 25 %
+   :width: 45 %
+
+
+Water Connectors
+================
+
+
+Water Hose Connectors
+---------------------
+
+.. image:: img/hose_connector.png
+   :width: 45 %
+   :alt: Water hose
+
+
+Flower Pots
+-----------
+
+.. image:: img/flower_pot.png
+   :width: 45 %
+   :alt: Flower pot
+
+
+Water-level Meter
+-----------------
+
+.. image:: img/level_meter_top.png
+   :width: 45 %
+   :alt: Water-level meter (top)
+
+.. image:: img/level_meter_bottom.png
+   :width: 45 %
+   :alt: Water-level meter (bottom)

@@ -2,11 +2,11 @@
 robophery garden compute box
 */
 
-include <../../../lib/connector/connector_keystone.scad>;
-include <../../../lib/connector/connector_usb.scad>;
-include <../../../lib/nut/nut_hexagonal.scad>;
-include <../../../lib/box/box_waterproof.scad>;
-include <../../../lib/device/device_raspberrypi.scad>;
+include <../../lib/connector/connector_keystone.scad>;
+include <../../lib/connector/connector_usb.scad>;
+include <../../lib/nut/nut_hexagonal.scad>;
+include <../../lib/box/box_waterproof.scad>;
+include <../../lib/device/device_raspberrypi.scad>;
 
 boxSizeX=110;
 boxSizeY=160;

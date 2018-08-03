@@ -1,5 +1,5 @@
  
-include <../../../lib/joint/joint_corner_rect.scad>;
+include <../../lib/joint/joint_corner_rect.scad>;
 
 olive=[0.7,0.7,0.7];
 

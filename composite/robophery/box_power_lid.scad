@@ -2,13 +2,11 @@
 robophery garden power box lid
 */
 
-include <../../../lib/connector/connector_euro.scad>;
-include <../../../lib/connector/connector_keystone.scad>;
-include <../../../lib/button/button_orthogonal.scad>;
-include <../../../lib/box/box_waterproof.scad>;
+include <../../lib/connector/connector_power.scad>;
+include <../../lib/box/box_waterproof.scad>;
 
-boxSizeX=110;
-boxSizeY=150;
+boxSizeX=120;
+boxSizeY=120;
 boxInnerHeight=65;
 boxBottomTopThickness=1.5;
 boxScrewCornerRadius=6;
@@ -22,6 +20,8 @@ screwnoseDiameter=4;
 screwnoseHeight=5;
 screwnoseWallThickness=2.8;
 boxClearance=0.1;
+
+difference() {
 
 waterproofBoxLid(
     boxSizeX=boxSizeX,
@@ -40,3 +40,18 @@ waterproofBoxLid(
     screwnoseWallThickness=screwnoseWallThickness,
     boxClearance=boxClearance
 );
+
+    // power output connectors
+    translate([35,35,boxWallThickness/2+.4]) rotate([0,180,0])
+        connector_IP54(boxWallThickness+1,boxClearance+0.1);
+
+    translate([35,85,boxWallThickness/2+.4]) rotate([0,180,0])
+        connector_IP54(boxWallThickness+1,boxClearance+0.1);
+
+    translate([85,35,boxWallThickness/2+.4]) rotate([0,180,0])
+        connector_IP54(boxWallThickness+1,boxClearance+0.1);
+
+    translate([85,85,boxWallThickness/2+.4]) rotate([0,180,0])
+        connector_IP54(boxWallThickness+1,boxClearance+0.1);
+
+}

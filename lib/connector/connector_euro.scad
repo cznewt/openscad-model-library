@@ -6,7 +6,7 @@ sides = 100;
 //connector_GSD4(3,0.1);
 //connector_Schurter_6100_4(3,0.1);
 
-module connector_Schurter_6100_4(depth,clear)
+module connector_Schurter_6100_4(depth,clear, type="simple")
 {
     conn_height = 20;
     conn_width = 27.5;
@@ -17,8 +17,11 @@ module connector_Schurter_6100_4(depth,clear)
     lock_depth = 1;
 
     connector_euro(conn_height,conn_width,depth,conn_radius,conn_corner,clear);
-    translate([0, 0, lock_depth-depth/2])
-        connector_euro_lock(lock_width,lock_height,depth-lock_depth,clear);
+
+    if (type != "simple") {
+        translate([0, 0, lock_depth-depth/2])
+            connector_euro_lock(lock_width,lock_height,depth-lock_depth,clear);
+    }
 }
 
 module connector_GSD4(depth,clear)

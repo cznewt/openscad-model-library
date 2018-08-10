@@ -110,7 +110,19 @@ Water Hose Connectors
 
 .. image:: img/hose_connector.png
    :width: 45 %
-   :alt: Water hose
+   :alt: Water hose connector
+
+.. image:: img/tube_connector.png
+   :width: 45 %
+   :alt: Water tube connetor
+
+
+Bottle Caps
+-----------
+
+.. image:: img/bottle_cap.png
+   :width: 45 %
+   :alt: PET Bottle Cap
 
 
 Flower Pots

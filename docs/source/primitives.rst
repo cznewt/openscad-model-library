@@ -10,48 +10,66 @@ Container Models
 Waterproof Box
 --------------
 
-.. image:: img/waterproof_box_case.png
+.. image:: img/primitive/box_waterproof_case.png
    :width: 45 %
    :alt: Waterproof box case
 
-.. image:: img/waterproof_box_lid.png
+.. image:: img/primitive/box_waterproof_lid.png
    :width: 45 %
    :alt: Waterproof box lid
 
 
-Device Models
-=============
+Bolts and Nuts
+==============
 
-Raspberry Pi
-------------
-
-.. image:: img/raspberrypi3.png
+.. image:: img/primitive/bolt_allen.png
    :width: 45 %
-   :alt: Raspberry Pi 3
 
-.. image:: img/raspberrypi_zero.png
+.. image:: img/primitive/bolt_conical_allen.png
    :width: 45 %
-   :alt: Raspberry Pi Zero
 
-
-Box Corner Models
-=================
-
-
-Rectangular Shape
------------------
-
-.. image:: img/rect_2cm_bot_corner.png
+.. image:: img/primitive/bolt_cone_head.png
    :width: 45 %
-   :alt: Bottom corner
 
-.. image:: img/rect_3cm_mid_corner.png
+.. image:: img/primitive/bolt_hex_metric.png
    :width: 45 %
-   :alt: Middle corner
 
-.. image:: img/rect_4cm_mid_t.png
+.. image:: img/primitive/bolt_grub.png
    :width: 45 %
-   :alt: Middle T
+
+.. image:: img/primitive/nut_hex_metric.png
+   :width: 45 %
+
+.. image:: img/primitive/washer.png
+   :width: 45 %
+
+
+Electronic Components
+=====================
+
+.. image:: img/primitive/connector_rj45.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_jack.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_pitch254_female.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_pitch254_male.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_serial.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_microusb.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_usb.png
+   :width: 45 %
+
+.. image:: img/primitive/connector_usb2x.png
+   :width: 45 %
 
 
 Connector Extrusions
@@ -61,11 +79,11 @@ Connector Extrusions
 EURO Connectors
 ---------------
 
-.. image:: img/euro_GSD4.png
+.. image:: img/primitive/euro_GSD4.png
    :width: 45 %
    :alt: EURO connector GSD4
 
-.. image:: img/euro_Schurter_6100_4.png
+.. image:: img/primitive/euro_Schurter_6100_4.png
    :width: 45 %
    :alt: EURO connector Schurter 6100-4
 
@@ -73,11 +91,11 @@ EURO Connectors
 D-SUB Connectors
 ----------------
 
-.. image:: img/dsub_9R.png
+.. image:: img/primitive/dsub_9R.png
    :width: 45 %
    :alt: D-SUB 9R
 
-.. image:: img/dsub_25R.png
+.. image:: img/primitive/dsub_25R.png
    :width: 45 %
    :alt: D-SUB 25R
 
@@ -85,42 +103,67 @@ D-SUB Connectors
 Keystone connectors
 -------------------
 
-.. image:: img/keystone_cat5e.png
+.. image:: img/primitive/keystone_cat5e.png
    :width: 45 %
    :alt: Keystone CAT 5e
 
 
-Button Extrusions
-=================
+Power connectors
+----------------
 
-
-Button P-H8550VB01
-------------------
-
-.. image:: img/button_P_H8550VB01.png
+.. image:: img/primitive/power_IP54.png
    :width: 45 %
+   :alt: IP54
 
 
-Water Connectors
+Simple Extrusions
+-----------------
+
+.. image:: img/primitive/button_P_H8550VB01.png
+   :width: 45 %
+   :alt: Button P-H8550VB01
+
+
+Physical connections
+====================
+
+.. image:: img/primitive/joint_pin_tack.png
+   :width: 45 %
+   :alt: Pin tack
+
+.. image:: img/primitive/joint_pin_simple.png
+   :width: 45 %
+   :alt: Pin
+
+.. image:: img/primitive/joint_hex_spacer.png
+   :width: 45 %
+   :alt: Hex spacer
+
+
+Water Components
 ================
 
 
 Water Hose Connectors
 ---------------------
 
-.. image:: img/hose_connector.png
+.. image:: img/primitive/tube_4mm_connector.png
    :width: 45 %
-   :alt: Water hose connector
+   :alt: Small Water tube connetor
 
-.. image:: img/tube_connector.png
+.. image:: img/primitive/tube_8mm_connector.png
    :width: 45 %
-   :alt: Water tube connetor
+   :alt: Small Water tube connetor
+
+.. image:: img/primitive/garden_hose_connector.png
+   :width: 45 %
+   :alt: Garden hose connector
 
 
 Bottle Caps
 -----------
 
-.. image:: img/bottle_cap.png
+.. image:: img/primitive/din28_bottle_cap.png
    :width: 45 %
    :alt: PET Bottle Cap
 
@@ -128,18 +171,6 @@ Bottle Caps
 Flower Pots
 -----------
 
-.. image:: img/flower_pot.png
+.. image:: img/primitive/flower_pot.png
    :width: 45 %
    :alt: Flower pot
-
-
-Water-level Meter
------------------
-
-.. image:: img/level_meter_top.png
-   :width: 45 %
-   :alt: Water-level meter (top)
-
-.. image:: img/level_meter_bottom.png
-   :width: 45 %
-   :alt: Water-level meter (bottom)

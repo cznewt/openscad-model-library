@@ -3,55 +3,78 @@
 Complete Models
 ===============
 
-RoboPhery Garden Project
-========================
+RoboPhery Control Boxes
+=======================
 
 Compute Box
 -----------
 
-.. image:: img/compute_box_case.png
+.. image:: img/composite/box_compute_case.png
    :width: 45 %
 
-.. image:: img/compute_box_lid.png
+.. image:: img/composite/box_compute_lid.png
    :width: 45 %
 
 Power Box
 ---------
 
-.. image:: img/power_box_case.png
+.. image:: img/composite/box_power_case.png
    :width: 45 %
 
-.. image:: img/power_box_lid.png
+.. image:: img/composite/box_power_lid.png
    :width: 45 %
 
 
 Sensor Box
 ----------
 
-.. image:: img/sensor_box_case.png
+.. image:: img/composite/box_sensor_case.png
    :width: 45 %
 
-.. image:: img/sensor_box_lid.png
+.. image:: img/composite/box_sensor_lid.png
    :width: 45 %
 
 
-Water Reservoir
----------------
+Device Models
+=============
 
-.. image:: img/cover_water_cable.png
+Raspberry Pi
+------------
+
+.. image:: img/primitive/device_raspberrypi3.png
+   :width: 45 %
+   :alt: Raspberry Pi 3
+
+.. image:: img/primitive/device_raspberrypi_zero.png
+   :width: 45 %
+   :alt: Raspberry Pi Zero
+
+
+Beagle Bone
+------------
+
+.. image:: img/primitive/device_beaglebone_black.png
+   :width: 45 %
+   :alt: Beagle Bone Black
+
+
+Gardening Models
+================
+
+Water Management
+----------------
+
+.. image:: img/composite/cover_water_cable.png
    :width: 45 %
 
-.. image:: img/distance_meter.png
-   :width: 45 %
-
-.. image:: img/complete_reservoir.png
+.. image:: img/composite/distance_meter.png
    :width: 45 %
 
 
 Support Frame
 -------------
 
-.. image:: img/full_case.png
+.. image:: img/composite/full_case.png
    :width: 45 %
    :alt: Full case
 
@@ -59,6 +82,6 @@ Support Frame
 Miscellaneous Projects
 ======================
 
-.. image:: img/el_grill.png
+.. image:: img/composite/el_grill.png
    :width: 45 %
    :alt: Electric Grill

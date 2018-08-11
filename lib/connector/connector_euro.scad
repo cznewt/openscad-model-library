@@ -1,12 +1,12 @@
 
-include <../nut/nut_hexagonal.scad>;
+include <../bolt/metric_bolt.scad>;
 
 sides = 100;
 
-//connector_GSD4(3,0.1);
-//connector_Schurter_6100_4(3,0.1);
+//connector_GSD4_extrusion(3,0.1);
+//connector_Schurter_6100_4_extrusion(3,0.1);
 
-module connector_Schurter_6100_4(depth,clear, type="simple")
+module connector_Schurter_6100_4_extrusion(depth,clear)
 {
     conn_height = 20;
     conn_width = 27.5;
@@ -24,7 +24,7 @@ module connector_Schurter_6100_4(depth,clear, type="simple")
     }
 }
 
-module connector_GSD4(depth,clear)
+module connector_GSD4_extrusion(depth,clear)
 {
     conn_height = 24.5;
     conn_width = 32.5;
@@ -34,20 +34,12 @@ module connector_GSD4(depth,clear)
     hole_diameter = 3.0+clear;
     conn_hole_distance = (hole_width-conn_width)/2;
 
-    connector_euro(conn_height,conn_width,depth,conn_radius,conn_corner,clear);
+    connector_euro_extrusion(conn_height,conn_width,depth,conn_radius,conn_corner,clear);
+
     translate([-conn_width/2-conn_hole_distance,0,0])
-        connector_euro_hole(hole_diameter,depth,clear);
+        m1_6_hex_bolt_extrude(depth, 1, clear);
     translate([conn_width/2+conn_hole_distance,0,0])
-        connector_euro_hole(hole_diameter,depth,clear);
-}
-
-module connector_euro_hole(diameter,depth,clear)
-{
-    radius = diameter/2 + clear;
-
-    cylinder(r=radius, h=depth,center=true,$fn=sides);
-    translate([0,0,2-depth])
-        nut_M(6,1,clear);
+        m1_6_hex_bolt_extrude(depth, 1, clear);
 }
 
 module connector_euro_lock(width,height,depth,clear)
@@ -59,7 +51,7 @@ module connector_euro_lock(width,height,depth,clear)
     cube([width, height, depth],center=true);
 }
 
-module connector_euro(height,width,depth,radius,corner,clear)
+module connector_euro_extrusion(height,width,depth,radius,corner,clear)
 {
     height = height+2*clear;
     width = width+2*clear;

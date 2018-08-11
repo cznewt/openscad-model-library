@@ -1,4 +1,6 @@
 
+sides = 50;
+
 //connector_garden_hose(5, 0.1);
 
 module connector_garden_hose(height, clear)
@@ -46,35 +48,35 @@ module connector_garden_hose(height, clear)
         union()
         {
         
-    cylinder(r=r2,h=t1,$fn=vert0);
+    cylinder(r=r2,h=t1,$fn=sides);
 
         translate([0,0,t1])
         {
-            cylinder(r=r2,h=t2,$fn=vert0);
+            cylinder(r=r2,h=t2,$fn=sides);
 
             translate([0,0,t2])
             difference()
             {
-            cylinder(r=r2,h=t3,$fn=vert0);
+            cylinder(r=r2,h=t3,$fn=sides);
 
             translate([0,0,t3])
             scale([1,1,t3/(r2-r3)])
-            rotate_extrude(convexity=3, $fn=vert0)
+            rotate_extrude(convexity=3, $fn=sides)
             translate([r2,0,0])
-            circle(r=r2-r3,$fn=vert1);
+            circle(r=r2-r3,$fn=sides);
             }
 
         }
 
         // trapezoidal part
         translate([0,0,t1+t2+t3])
-        rotate_extrude(convexity=3, $fn=vert0)
+        rotate_extrude(convexity=3, $fn=sides)
         polygon(points=[[0,0],[r3,0],[r5,t4],[r5,t4+t5],[r7,t4+t5+t6],[0,t4+t5+t6]],paths=[[0,1,2,3,4,5]]);
 
         //tip
         translate([0,0,s6])
         {
-            cylinder(r = r7, h=t7+t8,$fn=vert0) ;
+            cylinder(r = r7, h=t7+t8,$fn=sides) ;
             translate([0,0,t7+t8+0.5])
             torus(2.5,r7-2.5,vert1,vert0);
             // maybe add cylinder here ################### "t_8_1/2"
@@ -93,12 +95,12 @@ translate([0,0,s6+t7+t8/2])
 torus(t8/2+.9, r8+t8/2+2,vert1,vert0); // test
 
 
-    cylinder(r=riB,h= (t1+24)*1.1,$fn=vert0);  // to see 24 mm 
+    cylinder(r=riB,h= (t1+24)*1.1,$fn=sides);  // to see 24 mm 
 
     translate([0,0,-0.05])
     //cylinder(r1=riA,r2=riB,h=10,$fn=vert0);
     //cylinder(r1=riA,r2=riB,h=10,$fn=vert0);  // h=10 just looks good
-    cylinder(r1=riA+1.0,r2=riB,h=12,$fn=vert0);  // h=10 just looks good
+    cylinder(r1=riA+1.0,r2=riB,h=12,$fn=sides);  // h=10 just looks good
 
 
     // DEBUGGING CUT
@@ -111,8 +113,8 @@ torus(t8/2+.9, r8+t8/2+2,vert1,vert0); // test
 
 module torus(ra,rb,va,vb)
 {
-    rotate_extrude(convexity=3, $fn=vb)
+    rotate_extrude(convexity=3, $fn=sides)
     translate([rb,0,0])
         rotate(45,[0,0,1])
-            circle(r=ra,$fn=va);
+            circle(r=ra,$fn=sides);
 }

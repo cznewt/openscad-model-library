@@ -1,4 +1,10 @@
 
 include <../../lib/connector/connector_euro.scad>;
+include <../../lib/plate.scad>;
 
-connector_Schurter_6100_4(3,0.1);
+difference() {
+    plate(60,40,3);
+    rotate([0,180,0]) {
+        connector_Schurter_6100_4_extrusion(3,0.1);
+    }
+}
